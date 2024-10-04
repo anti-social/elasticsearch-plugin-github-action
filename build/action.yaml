@@ -1,6 +1,10 @@
 name: 'Elasticsearch plugin github action'
 description: 'GitHub actio that builds elasticsearch plugins'
 
+inputs:
+  es-version:
+    description: 'Major and minor version of Elasticsearch'
+    required: true
 
 runs:
   using: "composite"
@@ -10,7 +14,19 @@ runs:
   - name: Set environmeng
     shell: bash
     run: |
-      echo "JDK_IMAGE=openjdk:14" >> "${GITHUB_ENV}"
+      case "${{ inputs.es-version }}" in
+        "7.9")
+          JDK_IMAGE=openjdk:14
+          ;;
+        "7.13")
+          JDK_IMAGE=eclipse-temurin:16
+          ;;
+        *)
+          echo "Not suported Elasticsearch version: ${{ inputs.es-version }}"
+          exit 1
+          ;;
+      esac
+      echo "JDK_IMAGE=$JDK_IMAGE" >> "${GITHUB_ENV}"
       echo "GRADLE_ARGS=--info --stacktrace" >> "${GITHUB_ENV}"
 
   - name: Install podman
