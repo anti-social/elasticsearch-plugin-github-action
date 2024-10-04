@@ -57,7 +57,7 @@ runs:
     shell: bash
     run: |
       set -eux
-      PODMAN_RUN_ARGS="-it --rm --userns keep-id --net host -v $(pwd):/work -w /work -e HOME=/work ${{ env.JDK_IMAGE }}"
+      PODMAN_RUN_ARGS="-it --rm --init --userns keep-id --net host -v $(pwd):/work -w /work -e HOME=/work ${{ env.JDK_IMAGE }}"
       podman run $PODMAN_RUN_ARGS ./gradlew assemble ${{ env.GRADLE_ARGS }}
       podman run $PODMAN_RUN_ARGS ./gradlew test ${{ env.GRADLE_ARGS }}
       podman run $PODMAN_RUN_ARGS ./gradlew integTest ${{ env.GRADLE_ARGS }}
