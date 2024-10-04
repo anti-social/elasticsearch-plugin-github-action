@@ -1,13 +1,17 @@
 name: 'Elasticsearch plugin github action'
 description: 'GitHub actio that builds elasticsearch plugins'
 
+
 runs:
   using: "composite"
-  env:
-    JDK_IMAGE: openjdk:14
-    GRADLE_ARGS: "--info --stacktrace"
   steps:
   - uses: actions/checkout@v4
+
+  - name: Set environmeng
+    shell: bash
+    run: |
+      echo "JDK_IMAGE=openjdk:14" >> "${GITHUB_ENV}"
+      echo "GRADLE_ARGS=--info --stacktrace" >> "${GITHUB_ENV}"
 
   - name: Install podman
     run: |
@@ -16,7 +20,7 @@ runs:
 
   - name: Pull jdk image
     run: |
-      podman pull $JDK_IMAGE
+      podman pull ${{ env.JDK_IMAGE }}
 
   - name: Cache gradle wrapper
     uses: actions/cache@v4
@@ -35,10 +39,10 @@ runs:
   - name: Assemble and run tests
     run: |
       set -eux
-      PODMAN_RUN_OPTS="-it --rm --userns keep-id --net host -v $(pwd):/work -w /work -e HOME=/work $JDK_IMAGE"
-      podman run $PODMAN_RUN_OPTS ./gradlew assemble $GRADLE_ARGS
-      podman run $PODMAN_RUN_OPTS ./gradlew test $GRADLE_ARGS
-      podman run $PODMAN_RUN_OPTS ./gradlew integTest $GRADLE_ARGS
+      PODMAN_RUN_ARGS="-it --rm --userns keep-id --net host -v $(pwd):/work -w /work -e HOME=/work ${{ env.JDK_IMAGE }}"
+      podman run $PODMAN_RUN_ARGS ./gradlew assemble ${{ env.GRADLE_ARGS }}
+      podman run $PODMAN_RUN_ARGS ./gradlew test ${{ env.GRADLE_ARGS }}
+      podman run $PODMAN_RUN_ARGS ./gradlew integTest ${{ env.GRADLE_ARGS }}
 
   - name: Save release version
     if: |
