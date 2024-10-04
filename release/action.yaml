@@ -9,30 +9,6 @@ runs:
       name: elasticsearch-plugin
 
   - name: Create release
-    id: create_release
-    uses: actions/create-release@v1
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: ncipollo/release-action@v1
     with:
-      tag_name: ${{ github.ref }}
-      release_name: Release ${{ github.ref }}
-      draft: false
-
-  - name: Fetch release version
-    run: |
-      set -eux
-      ls -l
-      RELEASE_VERSION=$(cat release.version)
-      echo "Found release: $RELEASE_VERSION"
-      echo "RELEASE_ARTIFACT_NAME=rescore-grouping-mixup-$RELEASE_VERSION.zip" >> $GITHUB_ENV
-
-  - name: Upload release
-    id: upload-release
-    uses: actions/upload-release-asset@v1
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      asset_path: ${{ env.RELEASE_ARTIFACT_NAME }}
-      asset_name: ${{ env.RELEASE_ARTIFACT_NAME }}
-      asset_content_type: application/zip
+      artifacts: '*.zip,*.deb'
