@@ -15,15 +15,14 @@ runs:
     shell: bash
     run: |
       case "${{ inputs.es-version }}" in
-        "7.9")
-          JDK_IMAGE=openjdk:14
+        "7.9" | "7.10" | "7.11")
+          JDK_IMAGE=openjdk:15
           ;;
-        "7.13")
+        "7.12" | "7.13" | "7.14")
           JDK_IMAGE=eclipse-temurin:16
           ;;
         *)
-          echo "Not suported Elasticsearch version: ${{ inputs.es-version }}"
-          exit 1
+          JDK_IMAGE=eclipse-temurin:17
           ;;
       esac
       echo "JDK_IMAGE=$JDK_IMAGE" >> "${GITHUB_ENV}"
