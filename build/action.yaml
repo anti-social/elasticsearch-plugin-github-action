@@ -3,6 +3,9 @@ description: 'GitHub actio that builds elasticsearch plugins'
 
 runs:
   using: "composite"
+  env:
+    JDK_IMAGE: openjdk:14
+    GRADLE_ARGS: "--info --stacktrace"
   steps:
   - uses: actions/checkout@v4
 
