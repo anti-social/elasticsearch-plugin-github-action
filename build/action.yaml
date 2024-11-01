@@ -4,7 +4,10 @@ description: 'GitHub actio that builds elasticsearch plugins'
 inputs:
   es-version:
     description: 'Major and minor version of Elasticsearch'
-    required: true
+    required: false
+  os-version:
+    description: 'Major and minor version of OpenSearch'
+    required: false
 
 runs:
   using: "composite"
@@ -25,6 +28,18 @@ runs:
           JDK_IMAGE=eclipse-temurin:17
           ;;
       esac
+      case "${{ inputs.os-version }}" in
+        "1.0" | "1.1" | "1.2")
+          JDK_IMAGE=openjdk:15
+          ;;
+        *)
+          JDK_IMAGE=eclipse-temurin:17
+          ;;
+      esac
+      if -z "$JDK_IMAGE"; then
+        echo "Missing JDK_IMAGE variable. Specify supported es-version or os-version"
+        exit 1
+      fi
       echo "JDK_IMAGE=$JDK_IMAGE" >> "${GITHUB_ENV}"
       echo "GRADLE_ARGS=--info --stacktrace" >> "${GITHUB_ENV}"
 
