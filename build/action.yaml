@@ -38,7 +38,7 @@ runs:
           JDK_IMAGE=eclipse-temurin:17
           ;;
       esac
-      if -z "$JDK_IMAGE"; then
+      if [[ -z "$JDK_IMAGE" ]]; then
         echo "Missing JDK_IMAGE variable. Specify supported es-version or os-version"
         exit 1
       fi
