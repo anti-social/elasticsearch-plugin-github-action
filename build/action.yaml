@@ -20,6 +20,8 @@ runs:
     shell: bash
     run: |
       case "${{ inputs.es-version }}" in
+        "")
+          ;;
         "7.9" | "7.10" | "7.11")
           JDK_IMAGE=openjdk:15
           ;;
@@ -31,6 +33,8 @@ runs:
           ;;
       esac
       case "${{ inputs.os-version }}" in
+        "")
+          ;;
         "1.0" | "1.1" | "1.2")
           JDK_IMAGE=openjdk:15
           ;;
