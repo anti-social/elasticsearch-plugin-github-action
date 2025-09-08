@@ -50,7 +50,15 @@ runs:
         exit 1
       fi
       echo "JDK_IMAGE=$JDK_IMAGE" >> "${GITHUB_ENV}"
-      echo "GRADLE_ARGS=--info --stacktrace" >> "${GITHUB_ENV}"
+      GITHUB_REF="${{ github.ref }}"
+      if[[ "$GITHUB_REF" == refs/tags/v* ]]; then
+        if [[ -z "${{ inputs.os-version }}" ]]; then
+          VERSION_GRADLE_ARG="-P${GITHUB_REF#*-os}"
+        else if [[ -z "${{ inputs.os-version }}" ]]; then
+          VERSION_GRADLE_ARG="-P${GITHUB_REF#*-es}"
+        fi
+      fi
+      echo "GRADLE_ARGS=$VERSION_GRADLE_ARG --info --stacktrace" >> "${GITHUB_ENV}"
 
   - name: Install podman
     shell: bash
