@@ -51,10 +51,10 @@ runs:
       fi
       echo "JDK_IMAGE=$JDK_IMAGE" >> "${GITHUB_ENV}"
       GITHUB_REF="${{ github.ref }}"
-      if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-        PLUGIN_VERSION_GRADLE_ARG="-PpluginVersion=${GITHUB_REF#refs/tags/*}"
+      if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+        TAG_VERSION_GRADLE_ARG="-PtagVersion=${GITHUB_REF#refs/tags/*}"
       fi
-      echo "GRADLE_ARGS=$PLUGIN_VERSION_GRADLE_ARG --info --stacktrace" >> "${GITHUB_ENV}"
+      echo "GRADLE_ARGS=${TAG_VERSION_GRADLE_ARG} --info --stacktrace" >> "${GITHUB_ENV}"
 
   - name: Install podman
     shell: bash
